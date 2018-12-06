@@ -2,7 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-const customMW = require('./custom_middleware.js');
+const supplierRouter = require('./routers/supplier_router');
+const itemRouter = require('./routers/item_router');
 
 const server = express();
 const PORT = 5050;
@@ -10,14 +11,12 @@ const PORT = 5050;
 server.use(
   express.json(), 
   helmet(),
-  morgan('dev'),
-  customMW.gatekeeper
+  morgan('dev')
 );
 
-// route handlers
-server.get('/entrance', (req, res) => {
-  res.status(404).json({message: 'welcome my good weasel'});
-});
+server.use('/api/suppliers', supplierRouter);
+server.use('/api/items', itemRouter);
+
 
 server.listen(PORT, err => {
   console.log(`Listening on port ${PORT}`);
